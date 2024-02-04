@@ -1,6 +1,7 @@
 package com.example.springbootdemos.controllers;
 
 import com.example.springbootdemos.dao.CustomerDAO;
+import com.example.springbootdemos.dto.CustomerDTO;
 import com.example.springbootdemos.models.Customer;
 import com.example.springbootdemos.repository.CustomerDAOInter;
 import jakarta.validation.Valid;
@@ -10,11 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customers")
 @AllArgsConstructor
-public class Controller {
+public class CustomerController {
 //    @GetMapping("/")
 //    public ResponseEntity<String> homeGet() {
 //        return new ResponseEntity<String>("home get", HttpStatus.OK);
@@ -28,9 +30,12 @@ public class Controller {
     private CustomerDAOInter customerDAOInter;
 
     @GetMapping("")
-    public ResponseEntity<List<Customer>> getCustomers() {
+    public ResponseEntity<List<CustomerDTO>> getCustomers() {
         //List<Customer> all = customerDAO.findAll();
-        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.OK);
+        List<Customer> all = customerDAOInter.findAll();
+        List<CustomerDTO> collect = all.stream().map(customer ->
+                new CustomerDTO(customer.getName(), customer.getAge())).collect(Collectors.toList());
+        return new ResponseEntity<>(collect, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +45,10 @@ public class Controller {
     }
 
     @PostMapping("")
-    public void saveCustomerToJSONBody(@RequestBody @Valid Customer customer) {
+    public void saveCustomerToJSONBody(@RequestBody @Valid CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        customer.setName(customerDTO.getCustomerName());
+        customer.setAge(customerDTO.getCustomerAge());
         customerDAOInter.save(customer);
     }
     @DeleteMapping("/{id}")

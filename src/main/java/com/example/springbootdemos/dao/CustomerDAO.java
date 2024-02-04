@@ -13,6 +13,7 @@ public class CustomerDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Transactional
     public void save(Customer customer) {
         entityManager.persist(customer);

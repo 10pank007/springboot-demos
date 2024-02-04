@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class CustomerSizeExceptionDTO {
     private int code;
-    private String msg;
     private String field;
+    private String msg;
+
 
 }

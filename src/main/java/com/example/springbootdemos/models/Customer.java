@@ -25,4 +25,6 @@ public class Customer {
     @Size(min = 2, message = "name must be at least 2 characters")
     @Size(max = 255, message = "name must be not more than 255 characters")
     private String name;
+    private String password;
+    private int age;
 }
