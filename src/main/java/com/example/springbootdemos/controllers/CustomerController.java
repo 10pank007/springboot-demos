@@ -4,6 +4,7 @@ import com.example.springbootdemos.dao.CustomerDAO;
 import com.example.springbootdemos.dto.CustomerDTO;
 import com.example.springbootdemos.models.Customer;
 import com.example.springbootdemos.repository.CustomerDAOInter;
+import com.example.springbootdemos.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,59 +18,39 @@ import java.util.stream.Collectors;
 @RequestMapping("/customers")
 @AllArgsConstructor
 public class CustomerController {
-//    @GetMapping("/")
-//    public ResponseEntity<String> homeGet() {
-//        return new ResponseEntity<String>("home get", HttpStatus.OK);
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<String> homePost() {
-//        return new ResponseEntity<>("home post", HttpStatus.CREATED);
-//    }
-    //private CustomerDAO customerDAO;
-    private CustomerDAOInter customerDAOInter;
+    private CustomerService service;
 
     @GetMapping("")
     public ResponseEntity<List<CustomerDTO>> getCustomers() {
-        //List<Customer> all = customerDAO.findAll();
-        List<Customer> all = customerDAOInter.findAll();
-        List<CustomerDTO> collect = all.stream().map(customer ->
-                new CustomerDTO(customer.getName(), customer.getAge())).collect(Collectors.toList());
-        return new ResponseEntity<>(collect, HttpStatus.OK);
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        //Customer byId = customerDAO.findById(id);
-        return new ResponseEntity<>(customerDAOInter.findById(id).get(), HttpStatus.OK);
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable int id) {
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("")
     public void saveCustomerToJSONBody(@RequestBody @Valid CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        customer.setName(customerDTO.getCustomerName());
-        customer.setAge(customerDTO.getCustomerAge());
-        customerDAOInter.save(customer);
+        service.saveCustomer(customerDTO);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Customer>> deleteCustomers(@PathVariable("id") int id) {
-        //customerDAO.deleteById(id);
-        customerDAOInter.deleteById(id);
-        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.ACCEPTED);
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCustomers(@PathVariable("id") int id) {
+        service.delete(id);
     }
     @PatchMapping ("")
-    public ResponseEntity<List<Customer>> updateCustomers(@RequestBody Customer customer) {
-        customerDAOInter.save(customer);
-        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.OK);
+    public ResponseEntity<CustomerDTO> updateCustomers(@RequestBody CustomerDTO dto) {
+        return new ResponseEntity<>(service.update(dto), HttpStatus.OK);
     }
-    @GetMapping("/findBy/name/{name}")
-    public List<Customer> findByNameQuery(@PathVariable String name) {
-        return customerDAOInter.byName(name);
-    }
-    @GetMapping("/findBy/name/method/{name}")
-    public List<Customer> findByNameMethodQuery(@PathVariable String name) {
-        return customerDAOInter.findByName(name);
-    }
+//    @GetMapping("/findBy/name/{name}")
+//    public List<Customer> findByNameQuery(@PathVariable String name) {
+//        return customerDAOInter.byName(name);
+//    }
+//    @GetMapping("/findBy/name/method/{name}")
+//    public List<Customer> findByNameMethodQuery(@PathVariable String name) {
+//        return customerDAOInter.findByName(name);
+//    }
 
 
 //    @PostMapping("/customers")
