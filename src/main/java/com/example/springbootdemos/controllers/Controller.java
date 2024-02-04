@@ -2,6 +2,7 @@ package com.example.springbootdemos.controllers;
 
 import com.example.springbootdemos.dao.CustomerDAO;
 import com.example.springbootdemos.models.Customer;
+import com.example.springbootdemos.repository.CustomerDAOInter;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,34 +23,45 @@ public class Controller {
 //    public ResponseEntity<String> homePost() {
 //        return new ResponseEntity<>("home post", HttpStatus.CREATED);
 //    }
-    private CustomerDAO customerDAO;
+    //private CustomerDAO customerDAO;
+    private CustomerDAOInter customerDAOInter;
 
     @GetMapping("")
     public ResponseEntity<List<Customer>> getCustomers() {
-        List<Customer> all = customerDAO.findAll();
-        return new ResponseEntity<>(all, HttpStatus.OK);
+        //List<Customer> all = customerDAO.findAll();
+        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        Customer byId = customerDAO.findById(id);
-        return new ResponseEntity<>(byId, HttpStatus.OK);
+        //Customer byId = customerDAO.findById(id);
+        return new ResponseEntity<>(customerDAOInter.findById(id).get(), HttpStatus.OK);
     }
 
     @PostMapping("")
     public void saveCustomerToJSONBody(@RequestBody Customer customer) {
-        customerDAO.save(customer);
+        customerDAOInter.save(customer);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<List<Customer>> deleteCustomers(@PathVariable("id") int id) {
-        customerDAO.deleteById(id);
-        return new ResponseEntity<>(customerDAO.findAll(), HttpStatus.ACCEPTED);
+        //customerDAO.deleteById(id);
+        customerDAOInter.deleteById(id);
+        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.ACCEPTED);
     }
     @PatchMapping ("")
     public ResponseEntity<List<Customer>> updateCustomers(@RequestBody Customer customer) {
-        customerDAO.update(customer);
-        return new ResponseEntity<>(customerDAO.findAll(), HttpStatus.OK);
+        customerDAOInter.save(customer);
+        return new ResponseEntity<>(customerDAOInter.findAll(), HttpStatus.OK);
     }
+    @GetMapping("/findBy/name/{name}")
+    public List<Customer> findByNameQuery(@PathVariable String name) {
+        return customerDAOInter.byName(name);
+    }
+    @GetMapping("/findBy/name/method/{name}")
+    public List<Customer> findByNameMethodQuery(@PathVariable String name) {
+        return customerDAOInter.findByName(name);
+    }
+
 
 //    @PostMapping("/customers")
 //    public ResponseEntity<List<Customer>> createCustomers(
