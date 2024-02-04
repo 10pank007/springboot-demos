@@ -1,6 +1,8 @@
 package com.example.springbootdemos.controllers;
 
 import com.example.springbootdemos.models.Customer;
+import com.example.springbootdemos.models.view.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,13 @@ import java.util.List;
 
 @RestController
 public class Controller {
+    List<Customer> customers = new ArrayList<>();
+
+    public Controller() {
+        customers.add(new Customer(1, "ivan"));
+        customers.add(new Customer(2, "petro"));
+        customers.add(new Customer(3, "stepan"));
+    }
 
     @GetMapping("/")
     public ResponseEntity<String> homeGet() {
@@ -21,9 +30,10 @@ public class Controller {
         return new ResponseEntity<>("home post", HttpStatus.CREATED);
     }
 
+    @JsonView(Views.SuperAdmin.class)
     @GetMapping("/customers")
     public ResponseEntity<List<Customer>> getCustomers() {
-        return null;
+        return new ResponseEntity<>(this.customers, HttpStatus.OK);
     }
 
     @GetMapping("/customers/{id}")
