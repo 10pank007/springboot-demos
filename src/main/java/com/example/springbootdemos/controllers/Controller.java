@@ -3,6 +3,7 @@ package com.example.springbootdemos.controllers;
 import com.example.springbootdemos.dao.CustomerDAO;
 import com.example.springbootdemos.models.Customer;
 import com.example.springbootdemos.repository.CustomerDAOInter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class Controller {
     }
 
     @PostMapping("")
-    public void saveCustomerToJSONBody(@RequestBody Customer customer) {
+    public void saveCustomerToJSONBody(@RequestBody @Valid Customer customer) {
         customerDAOInter.save(customer);
     }
     @DeleteMapping("/{id}")
