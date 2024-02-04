@@ -43,28 +43,4 @@ public class CustomerController {
     public ResponseEntity<CustomerDTO> updateCustomers(@RequestBody CustomerDTO dto) {
         return new ResponseEntity<>(service.update(dto), HttpStatus.OK);
     }
-//    @GetMapping("/findBy/name/{name}")
-//    public List<Customer> findByNameQuery(@PathVariable String name) {
-//        return customerDAOInter.byName(name);
-//    }
-//    @GetMapping("/findBy/name/method/{name}")
-//    public List<Customer> findByNameMethodQuery(@PathVariable String name) {
-//        return customerDAOInter.findByName(name);
-//    }
-
-
-//    @PostMapping("/customers")
-//    public ResponseEntity<List<Customer>> createCustomers(
-//            @RequestParam int id,
-//            @RequestParam String name
-//    ) {
-//        this.customers.add(new Customer(id, name));
-//         return  new ResponseEntity<>(this.customers, HttpStatus.CREATED);
-//    }
-
-//@GetMapping("/customers")
-//@ResponseStatus(HttpStatus.OK)
-//public List<Customer> getCustomers() {
-//    return this.customers;
-//}
 }
